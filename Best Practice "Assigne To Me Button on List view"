@@ -1,0 +1,41 @@
+Script include 
+
+	var majorIncidentsUtils = Class.create();
+	majorIncidentsUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+	    updateMajorIncidents: function() {
+	        var gr = new GlideRecord('incident');
+	        var majorIds = this.getParameter('sysparam_majorids');
+	        var loggedUser = this.getParameter('sysparam_loggeduser');
+	        gr.addQuery('sys_id', 'IN', majorIds);
+	        gr.query();
+	        var count = 0;
+	        while (gr.next()) {
+	            gr.assigned_to = loggedUser;
+	            gr.update();
+	            count++;
+	        }
+	        return count;
+	    },
+	    type: 'majorIncidentsUtils'
+	});
+
+###########################################
+UI Action 
+
+function assignedToMe() {
+    var checked = g_list.getChecked();
+    if (checked == '') {
+        alert("Please Select at least one Record ");
+        return false;
+    } else {
+        
+        var ga = new GlideAjax('majorIncidentsUtils');
+        ga.addParam('sysparm_name', 'updateMajorIncidents');
+        ga.addParam('sysparam_majorids', checked);
+        ga.addParam('sysparam_loggeduser', g_user.userID);
+        ga.getXMLAnswer(function(answer) {
+            alert(answer + ' incidents assigned to you.');
+            g_list.refresh();
+        });
+    }
+}

@@ -1,0 +1,8 @@
+function openIncidentForm(){
+
+var url = 'https://dev65206.service-now.com/incident.do?sys_id=-1&sysparm_query=caller_id=' 
+    + g_form.getValue('u_caller') + '^cmdb_ci=' + g_form.getValue('u_configration_item');
+
+    g_navigation.openPopup(url);
+
+}

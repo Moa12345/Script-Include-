@@ -1,0 +1,36 @@
+
+var gr = new GlideRecord('incident');
+gr.initialize();
+//gr.caller_id = 'xyz';
+gr.setValue('caller_id', current.getValue('u_caller'));
+//gr.field1 = 'xyz';
+gr.setValue('cmdb_ci', current.getValue('u_configuration_item'));
+//gr.field1 = 'xyz';
+gr.setValue('short_description', current.getValue('u_short_description'));
+//gr.field1 = 'xyz';
+gr.setValue('description', current.getValue('u_description'));
+//gr.field1 = 'xyz';
+gr.setValue('assignment_group', current.getValue('u_assignment_group'));
+gr.insert();
+gs.addInfoMessage(gr.number + ' has been created!!');
+action.setRedirectURL(current);
+
+###################
+Better Version
+If you want to get the incident number correctly after insert:
+
+var gr = new GlideRecord('incident');
+
+gr.initialize();
+
+gr.setValue('caller_id', current.getValue('u_caller'));
+gr.setValue('cmdb_ci', current.getValue('u_configuration_item'));
+gr.setValue('short_description', current.getValue('u_short_description'));
+gr.setValue('description', current.getValue('u_description'));
+gr.setValue('assignment_group', current.getValue('u_assignment_group'));
+
+var incSysId = gr.insert();
+if (incSysId) {
+    gs.addInfoMessage('Incident ' + gr.getValue('number') + ' has been created!');
+}
+action.setRedirectURL(current);

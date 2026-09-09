@@ -1,0 +1,37 @@
+Script Include
+
+upddateIncidentPhase: function() {
+        var majorIds = this.getParameter('sysparam_majorids');
+        var gr = new GlideRecord('incident');
+        gr.addQuery('sys_id', 'IN', majorIds);
+        gr.query();
+        count = 0;
+        while (gr.next()) {
+            gr.state = 6;
+            gr.close_code = "Duplicate";
+            gr.close_notes = "solved by me ";
+            gr.update();
+            count++;
+        }
+        return count;
+    },
+#################################################
+
+UI Action
+
+function Resolved() {
+    var checked = g_list.getChecked();
+    if (!checked) {
+        alert("Please Select at least one record");
+        return false;
+    }
+    var ga = new GlideAjax('majorIncidentsUtils');
+    ga.addParam('sysparm_name', 'upddateIncidentPhase');
+    ga.addParam('sysparam_majorids',checked);
+    ga.getXMLAnswer(Response);
+    function Response(co) {
+        alert('Please note that ' + co + ' incident(s) have been resolved.');
+        g_list.refresh();
+    }
+    return false;
+}
